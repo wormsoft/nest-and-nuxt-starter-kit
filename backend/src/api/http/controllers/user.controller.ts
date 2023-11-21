@@ -1,7 +1,8 @@
-import {Controller, Post, Body} from '@nestjs/common';
-import {CreateUserDto} from "../../../application/dto/user.dto";
-import {UserService} from "../../../application/services/user.service";
-import {UserEntity} from "../../../domain/entities/user.entity";
+import {Body, Controller, Post} from '@nestjs/common';
+import {UserService} from '../../../application/services/user.service';
+import {UserEntity} from '../../../domain/entities/user.entity';
+import {CreateUserResponse} from '../schemas/create-user.response';
+import {CreateUserRequest} from '../schemas/create-user.request';
 
 @Controller('users')
 export class UserController {
@@ -9,11 +10,10 @@ export class UserController {
     }
 
     @Post()
-    async createUser(@Body() createUserDto: CreateUserDto) {
+    async createUser(@Body() request: CreateUserRequest): Promise<CreateUserResponse> {
         // TODO: catch domain error and process it
-        const user = new UserEntity(createUserDto.fullName, createUserDto.email, createUserDto.hashedPassword);
-        return {
-            userId: await this.userService.createUser(user),
-        };
+        const user = new UserEntity(0, request.fullName, request.email, request.hashedPassword);
+        const id = await this.userService.createUser(user);
+        return new CreateUserResponse(id);
     }
 }

@@ -1,9 +1,10 @@
 export class UserEntity {
+    public readonly id: number;
     public readonly fullName: string;
     public readonly email: string;
     public readonly hashedPassword: string;
 
-    constructor(fullName: string, email: string, hashedPassword: string) {
+    constructor(id: number, fullName: string, email: string, hashedPassword: string) {
         if (fullName.length === 0) {
             // TODO: use domain error
             throw new Error('full name can\'t be empty');
@@ -18,6 +19,7 @@ export class UserEntity {
         // This check cannot be performed at the controller level. This restriction can also be checked at the
         // service level.
 
+        this.id = id;
         this.fullName = fullName;
         this.email = email;
         this.hashedPassword = hashedPassword;
