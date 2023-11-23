@@ -1,3 +1,5 @@
+import {ArgumentError} from "../errors/argument.error";
+
 export class UserEntity {
     public readonly id: number;
     public readonly fullName: string;
@@ -6,13 +8,11 @@ export class UserEntity {
 
     constructor(id: number, fullName: string, email: string, hashedPassword: string) {
         if (fullName.length === 0) {
-            // TODO: use domain error
-            throw new Error('full name can\'t be empty');
+            throw new ArgumentError('full name can\'t be empty');
         }
 
         if (email.length === 0) {
-            // TODO: validate format
-            throw new Error('full name can\'t be empty');
+            throw new ArgumentError('email can\'t be empty');
         }
 
         // Check other business logic restrictions. For example, the number of user roles is always greater than 1.

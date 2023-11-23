@@ -11,7 +11,6 @@ export class UserController {
 
     @Post()
     async createUser(@Body() request: CreateUserRequest): Promise<CreateUserResponse> {
-        // TODO: catch domain error and process it
         const user = new UserEntity(0, request.fullName, request.email, request.hashedPassword);
         const id = await this.userService.createUser(user);
         return new CreateUserResponse(id);

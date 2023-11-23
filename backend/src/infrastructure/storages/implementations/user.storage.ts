@@ -1,6 +1,8 @@
 import {Injectable} from '@nestjs/common';
 import UserStorageInterface from '../interfaces/user.storage.interface';
 import {UserModel} from '../models/user.model';
+import {UserDoesNotExistsError} from "../../../domain/errors/user-does-not-exists.error";
+import {UserAlreadyExistsError} from "../../../domain/errors/user-already-exists.error";
 
 @Injectable()
 class UserStorage implements UserStorageInterface {
@@ -14,7 +16,7 @@ class UserStorage implements UserStorageInterface {
 
     createUser(user: UserModel): Promise<number> {
         if (this.idByEmailStorage.has(user.email)) {
-            throw new Error('user already exists');
+            throw new UserAlreadyExistsError(user.email);
         }
 
         const id = this.userByIdStorage.size + 1;
@@ -28,12 +30,12 @@ class UserStorage implements UserStorageInterface {
     getUserByEmail(email: string): Promise<UserModel> {
         const id = this.idByEmailStorage.get(email);
         if (!id) {
-            throw new Error('user does not exists');
+            throw new UserDoesNotExistsError(email);
         }
 
         const user = this.userByIdStorage.get(id);
         if (!user) {
-            throw new Error('user does not exists');
+            throw new UserDoesNotExistsError(email);
         }
 
         return Promise.resolve(user);
