@@ -1,7 +1,5 @@
 .idea
 .git
-**/.nuxt
-**/dist
-**/.output
 **/node_modules
+**/dist
 **/.env

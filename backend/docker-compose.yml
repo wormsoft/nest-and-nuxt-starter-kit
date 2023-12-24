@@ -1,0 +1,39 @@
+version: '3.8'
+
+networks:
+  backend:
+
+volumes:
+  postgres:
+
+services:
+  app:
+    build: .
+    restart: always
+    networks:
+      - backend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./deploy/config.yml:/app/deploy/config.yml
+    environment:
+      - APP_PORT=3000
+      - NODE_ENV=development
+      - DB_HOST=db
+    depends_on:
+      - db
+
+  db:
+    image: postgres:16
+    restart: always
+    networks:
+      - backend
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres:/var/lib/postgresql/data
+      - ./deploy/initdb/init-example-db.sh:/docker-entrypoint-initdb.d/init-example-db.sh
+    environment:
+      - POSTGRES_USER=example_user
+      - POSTGRES_PASSWORD=example_password
+      - POSTGRES_DB=postgres

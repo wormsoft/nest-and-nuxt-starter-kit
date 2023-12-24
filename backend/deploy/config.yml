@@ -1,0 +1,10 @@
+environment: local
+app:
+  name: nest-starter-kit
+  port: 3001
+db:
+  name: example
+  user: example_user
+  password: example_password
+  host: 127.0.0.1
+  port: 5432
