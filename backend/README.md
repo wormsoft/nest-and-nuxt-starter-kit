@@ -1,73 +1,189 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Backend
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Запуск
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+```shell
+# Переключаемся на требуемую версию NodeJS и npm
+nvm use
 
-## Description
+# Устанавливаем необходимые зависимости
+yarn global add @nestjs/cli
+yarn install
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+# Собираем проект
+yarn build
 
-## Installation
+# Запускаем базу
+docker run -itd --name example -p 5432:5432 -e POSTGRES_PASSWORD=example_password -e POSTGRES_USER=example_user -e POSTGRES_DB=example postgres
 
-```bash
-$ npm install
+# Запускаем приложение
+yarn start
 ```
 
-## Running the app
+## Обзор
 
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+```
+├── src
+│   ├── api
+│   │   └── http
+│   │       ├── controllers
+│   │       └── schemas
+│   ├── application
+│   │   ├── repositories
+│   │   │   ├── implementations
+│   │   │   └── interfaces
+│   │   └─── services
+│   │       ├── implementations
+│   │       └── interfaces
+│   ├── domain
+│   │   └── entities
+│   ├── infrastructure
+│   │   ├── logging
+│   │   └── storages
+│   │       ├── implementations
+│   │       ├── interfaces
+│   │       └── models
+│   ├── app.module.ts
+│   └── main.ts
+├── README.md
+├── package-lock.json
+├── package.json
+└── tsconfig.json
 ```
 
-## Test
+## Директории
 
-```bash
-# unit tests
-$ npm run test
+### `/src`
 
-# e2e tests
-$ npm run test:e2e
+Основная директория для исходного кода проекта.
 
-# test coverage
-$ npm run test:cov
-```
+### `/src/main.ts`
 
-## Support
+В данном файле обычно находится точка входа в приложение. Иногда в приложении необходимо создавать несколько различных
+точек входа для различных кейсов использования. Например, код, запускающий определенную CronJob, может быть размещен
+отдельно и независимо от кода веб-приложения. Также можно разместить CLI-утилиты, способствующие сопровождению и
+обслуживанию основного приложения. В данном случае, если требуются разные точки входа, рекомендуется выделить отдельную
+директорию `/src/cmd`, внутри которой разместить код различных точек входа и инициализации приложений.
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+* `/src/cmd/web/main.ts` – точка входа для запуска веб-приложения.
+* `/src/cmd/moving_data_to_archive_cronjob/main.ts` – точка входа в cron job, перемещающий данные в архив.
+* `...`
 
-## Stay in touch
+### `/src/api`
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+Директория, включающая файлы, связанные с API. В её состав входят описания контроллеров и схем запросов. Здесь может
+находиться не только описание различных протоколов взаимодействия, таких как OpenAPI/Swagger, JSON, GRPC,
+но и контракты сообщений для Kafka топиков.
 
-## License
+### `/src/api/http`
 
-Nest is [MIT licensed](LICENSE).
+Директория, включающая файлы, связанные с HTTP API. Здесь находятся контроллеры (`controllers`), ответственные за
+обработку запросов от клиентов, а также описания запросов и ответов, используемых в API.
+
+#### Замечание
+
+Если рассматривать приложение как сервер, реализующий HTTP API, то контроллеры можно переместить в директорию
+`application`. Это предложение основывается на разделении логики приложения и логики домена.
+
+Представим, что мы разрабатываем сервер, предоставляющий API для наложения фильтров на изображения.
+У нас есть правила, ограничивающие количество применений фильтров для каждого пользователя. Эти правила являются
+частью логики приложения. Реализации алгоритмов и фильтров уже включают в себя уровень логики домена. Такая логика
+должна быть размещена в директории domain, поскольку её можно в любой момент извлечь для создания CLI-утилиты или
+десктопного приложения. В данном примере, смешивая эти правила, мы усложняем возможное разделение на несколько
+отдельных приложений.
+
+### `/src/application`
+
+Директория содержит файлы, относящиеся к слою приложения.
+
+### `/src/application/repositories`
+
+В этой директории размещаются репозитории, ответственные за взаимодействие с данными. Этот слой должен включать в
+себя правила преобразования бизнес-сущностей в сущности уровня хранилища. Приведу несколько примеров.
+
+* Сервис для поиска путей:
+    * Уровень бизнес-логики: двунаправленный граф.
+    * Уровень хранилища: матрица расстояний.
+* Сервис работы с бинарным деревом поиска:
+    * Уровень бизнес-логики: бинарное дерево поиска в виде связанных узлов на указателях.
+    * Уровень хранилища: плоское представление в виде строки с вложенными
+      скобками (`(8 (3 (1) (6 (4) (7))) (10 (14 (13))))`).
+
+Соответствующие интерфейсы, определяющие контракты для репозиториев, находятся в директории `interfaces`. В директории
+`implementations` содержатся конкретные реализации.
+
+Слой может обрабатывать ошибки уровня инфраструктуры и преобразовывать их в ошибки уровня бизнес-логики.
+
+### `/src/application/services`
+
+В этой директории можно разместить сервисы, описывающие бизнес-логику приложения. Рекомендуется разделить их на
+интерфейсы и реализацию для достижения лучшей структурированности проекта.
+
+Этот слой взаимодействует исключительно с бизнес-сущностями (`/src/domain/entities`). Следовательно, он принимает их
+на вход, и передает их в репозитории. Код этого уровня организован примерно следующим
+образом: `controllers -> SERVICE -> repositories -> storage -> (database|file system|cloud storage)`.
+
+Слой поднимает и обрабатывает только ошибки уровня бизнес-логики. Ошибки уровня инфраструктуры, которые не преобразованы
+в ошибки бизнес-логики, должны либо пропускаться этим слоем, либо обрабатываться как общие ошибки без привязки к
+конкретным типам.
+
+**P.S.:** Также существует подход, согласно которому на этом уровне описывается конкретный бизнес-функционал, а
+сценарии, состоящие из нескольких функций, описываются в use case. Например:
+
+* **Сервис взаимодействия с учетными записями пользователей:**
+    * Определяет логику поиска пользователей.
+* **Сервис взаимодействия с ролями пользователей:**
+    * Определяет логику получения списка ролей пользователей.
+    * Определяет логику проверки возможности редактирования данных у пользователя с заданным списком ролей.
+* **Use case описывает операцию редактирования ролей пользователей админом:**
+    * Ищет учетную запись админа.
+    * Получает список ролей админа.
+    * Проверяет, есть ли у администратора возможность редактировать список ролей.
+    * Ищет учетную запись обычного пользователя.
+    * Получает список ролей обычного пользователя.
+    * Изменяет список ролей обычного пользователя и сохраняет изменения.
+
+### `/domain`
+
+Здесь размещаются файлы, связанные с бизнес-логикой домена. Это общие элементы, не зависящие от того, где приложение
+запущено или какой инфраструктурой оно оперирует.
+
+### `/domain/entities`
+
+В этой директории могут располагаться сущности, представляющие бизнес-объекты. Описание сущностей может включать в себя
+примитивные типы, пользовательские типы того же уровня, а также некоторые специфичные библиотечные типы, например,
+представление графа. Главное, чтобы типы из библиотек логически соответствовали тому же домену, что и сущности.
+
+### `/infrastructure`
+
+Здесь располагаются файлы, связанные с инфраструктурными задачами. В этой директории я бы разместил код:
+
+* настройки логирования,
+* инициализации и работы с метриками,
+* работы с хранилищами данных,
+* различное программное обеспечение,
+* парсинг файлов настройки.
+
+### `/infrastructure/storages`
+
+В этой директории находится код, описывающий взаимодействие с конкретными хранилищами данных. Здесь располагается код
+записи и считывания данных из хранилища. Рассмотрим код, который должен находиться в этом слое на примере работы с
+бинарными деревьями поиска. В таком сервисе бизнес-логика отвечает за построение графа. Слой репозиториев отвечает за
+преобразование графа в скобочное представление, а слой хранилища занимается сохранением этого представления в одном из
+хранилищ, будь то реляционная база данных или файловое хранилище (и тд.).
+
+Слой разделен на интерфейсы (`interfaces`), реализацию (`implementations`), и модели данных (`models`), которые будут
+удобны для взаимодействия с хранилищем. Также здесь мы должны обрабатывать ошибки от инфраструктуры, такие как
+дублирование записей с уникальным ключом, перемещение данных из одной партиции в другую и тд.
+
+**P.S.:** На практике можно иногда пренебрегать подобным слоем, если ваши структуры данных достаточно просты и не
+требуют специфичного преобразования на уровне репозиториев. В таком случае логику работы с хранилищем можно разместить в
+слое репозиториев, что обеспечит приемлемое разделение на слои.
+
+Однако, если появляется необходимость добавить кеширование на уровне сервера, я бы предпочел структуру проекта с
+отдельными репозиториями, где размещен кеш, и отдельно логикой работы с хранилищем на уровне стораджа.
+
+### `/infrastructure/logging`
+
+Может содержать код настройки системы логирования.
+Может содержать код настройки системы логирования.
