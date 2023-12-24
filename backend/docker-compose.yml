@@ -1,0 +1,31 @@
+version: '3.8'
+
+networks:
+  backend:
+
+services:
+  app:
+    build: .
+    restart: always
+    networks:
+      - backend
+    ports:
+      - "80:3000"
+    environment:
+      - APP_PORT=3000
+      - APP_NAME=nest-starter-kit
+      - NODE_ENV=local
+
+  db:
+    image: postgres:16
+    restart: always
+    networks:
+      - backend
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=example_user
+      - POSTGRES_PASSWORD=example_password
+      - POSTGRES_DATABASE=example

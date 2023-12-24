@@ -1,27 +1,20 @@
-import {ArgumentError} from "../errors/argument.error";
+import { Exclude } from 'class-transformer';
 
 export class UserEntity {
-    public readonly id: number;
-    public readonly fullName: string;
-    public readonly email: string;
-    public readonly hashedPassword: string;
+  public readonly id: number;
 
-    constructor(id: number, fullName: string, email: string, hashedPassword: string) {
-        if (fullName.length === 0) {
-            throw new ArgumentError('full name can\'t be empty');
-        }
+  public readonly email: string;
 
-        if (email.length === 0) {
-            throw new ArgumentError('email can\'t be empty');
-        }
+  public readonly username: string;
 
-        // Check other business logic restrictions. For example, the number of user roles is always greater than 1.
-        // This check cannot be performed at the controller level. This restriction can also be checked at the
-        // service level.
+  @Exclude({ toPlainOnly: true })
+  public readonly hashedPassword: string;
 
-        this.id = id;
-        this.fullName = fullName;
-        this.email = email;
-        this.hashedPassword = hashedPassword;
-    }
+  public readonly fullName: string;
+
+  public readonly isActive: boolean;
+
+  public readonly createdAt: Date;
+
+  public readonly updatedAt: Date;
 }

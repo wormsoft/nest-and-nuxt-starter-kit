@@ -1,5 +1,25 @@
 # Backend
 
+## Запуск
+
+```shell
+# Переключаемся на требуемую версию NodeJS и npm
+nvm use
+
+# Устанавливаем необходимые зависимости
+yarn global add @nestjs/cli
+yarn install
+
+# Собираем проект
+yarn build
+
+# Запускаем базу
+docker run -itd --name example -p 5432:5432 -e POSTGRES_PASSWORD=example_password -e POSTGRES_USER=example_user -e POSTGRES_DB=example postgres
+
+# Запускаем приложение
+yarn start
+```
+
 ## Обзор
 
 ```
@@ -12,7 +32,9 @@
 │   │   ├── repositories
 │   │   │   ├── implementations
 │   │   │   └── interfaces
-│   │   └── services
+│   │   └─── services
+│   │       ├── implementations
+│   │       └── interfaces
 │   ├── domain
 │   │   └── entities
 │   ├── infrastructure

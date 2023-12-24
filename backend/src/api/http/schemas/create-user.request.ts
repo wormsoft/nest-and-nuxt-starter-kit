@@ -1,6 +1,6 @@
-export class CreateUserRequest {
-    constructor(public readonly fullName: string,
-                public readonly email: string,
-                public readonly hashedPassword: string) {
-    }
+export interface CreateUserRequest {
+  email: string;
+  username: string;
+  hashedPassword: string;
+  fullName: string;
 }
