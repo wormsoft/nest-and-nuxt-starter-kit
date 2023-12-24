@@ -2,6 +2,8 @@
 
 ## Запуск
 
+Для локального поднимите базу данных, отредактируйте `./deploy/config.yml` и выполните:
+
 ```shell
 # Переключаемся на требуемую версию NodeJS и npm
 nvm use
@@ -13,11 +15,29 @@ yarn install
 # Собираем проект
 yarn build
 
-# Запускаем базу
-docker run -itd --name example -p 5432:5432 -e POSTGRES_PASSWORD=example_password -e POSTGRES_USER=example_user -e POSTGRES_DB=example postgres
-
 # Запускаем приложение
 yarn start
+```
+
+В проекте описана сборка с использованием Docker и docker-compose. Для ее использования выполните:
+
+```shell
+docker-compose up --build -d
+```
+
+## Использование API
+
+```shell
+curl -X POST --location 'http://localhost:3000/api/users/' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "email": "meetmorrowsolonmars@gmail.com",
+    "username": "meetmorrowsolonmars",
+    "hashedPassword": "password_hash",
+    "fullName": "Denisenko Maxim Vyacheslavovich"
+}'
+
+curl --location 'http://localhost:3000/api/users/meetmorrowsolonmars@gmail.com'
 ```
 
 ## Обзор

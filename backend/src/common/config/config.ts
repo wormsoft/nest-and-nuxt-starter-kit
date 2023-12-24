@@ -11,6 +11,10 @@ type Config = {
     name: string;
     port: number;
   };
+  db: {
+    host: string;
+    port: number;
+  };
 } & Record<string, never>;
 
 export default (): Config => {
@@ -19,5 +23,8 @@ export default (): Config => {
   const config = yaml.load(file) as Config;
   config.environment = process.env.NODE_ENV || config.environment;
   config.app.name = process.env.APP_NAME || config.app.name;
+  config.app.port = parseInt(process.env.APP_PORT) || config.app.port;
+  config.db.host = process.env.DB_HOST || config.db.host;
+  config.db.port = parseInt(process.env.DB_PORT) || config.db.port;
   return config;
 };
