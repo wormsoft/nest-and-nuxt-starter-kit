@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import * as path from 'path';
+import { MainModule } from '@modules/main/main.module';
+import { DatabaseModule } from '@infrastructure/database/database.module';
 
 @Module({
   imports: [
@@ -11,8 +11,10 @@ import * as path from 'path';
       serveRoot: '/',
       exclude: ['/api*'],
     }),
+    DatabaseModule.forRoot(),
+    MainModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}
