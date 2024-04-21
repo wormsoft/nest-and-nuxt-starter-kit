@@ -26,20 +26,43 @@ services:
       context: .
       target: finalNode
     networks:
-      - back
+      back:
+        aliases:
+          - node
+          - backend-node
     expose:
       - 3001
     restart: always
     environment:
       - APP_PORT=3001
+      - DATABASE_URL=postgres://postgres:${PG_PASSWORD}@db:5432/coffee?runMigrate=true
     healthcheck:
-      test: wget --no-verbose --tries=1 --spider http://localhost:3001 || exit 1
+      test: wget --no-verbose --tries=1 --spider http://localhost:3001/api || exit 1
       timeout: 3s
       interval: 3s
       retries: 10
+
+  # Database
+  db:
+    image: postgres:16.1-alpine
+    restart: always
+    networks:
+      - back
+    volumes:
+      # Volume for storing Postgres data (databases, tables, settings, etc.).
+      - postgres:/var/lib/postgresql/data
+      # Init script.
+      - ./server/pg/10-init-user-db.sh:/docker-entrypoint-initdb.d/10-init-user-db.sh
+    environment:
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
+
+
 networks:
   reverse-proxy:
     external:
       name: reverse-proxy
   back:
     driver: bridge
+
+volumes:
+  postgres:
