@@ -16,6 +16,7 @@ FROM base-builder as build_be
 WORKDIR /app
 
 COPY ./backend/package.json ./backend/yarn.lock* ./
+COPY ./backend/package.json ./backend/yarn.lock* ./backend/.npmrc* ./
 RUN yarn install
 ADD ./backend ./
 RUN yarn build
